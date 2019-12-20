@@ -50,6 +50,9 @@ func (e *EveNgApi) isValid() bool {
 	return e.eveNgApi != nil
 }
 
+/*
+ForceHttp can be used to force http instead of https
+*/
 func (e *EveNgApi) ForceHttp(useHttp bool) error {
 	if !e.isValid() {
 		return &NotValidError{}
@@ -151,7 +154,7 @@ func (e *EveNgApi) Logout() error {
 }
 
 func getHttpError(response *resty.Response) error {
-	data, err := json_decode(response.Body())
+	data, err := jsonDecode(response.Body())
 	if err != nil {
 		return errors.New("Status != 200")
 	}
@@ -242,7 +245,7 @@ func (e *EveNgApi) getAllLabsForFolder(folder string) ([]string, error) {
 	return labs, nil
 }
 
-func json_decode(byteArr []byte) (map[string]interface{}, error) {
+func jsonDecode(byteArr []byte) (map[string]interface{}, error) {
 	var data map[string]interface{}
 	err := json.Unmarshal(byteArr, &data)
 	if err != nil {
