@@ -33,5 +33,5 @@ monitoring check plugin for the [EVE-NG](https://www.eve-ng.net/) [API](https://
 	CRITICAL: lab myLab does not exist! | 'vpcs'=0;;;; 'iol'=0;;;; 'dynamips'=0;;;; 'qemu'=4;;;; 'docker'=0;;;;
 
 	Check if all nodes are up on all labs:
-	./check_eve_mg --hostname $hostname --username $username --password $password --lab all --all-hosts-up
+	./check_eve_ng --hostname $hostname --username $username --password $password --lab all --all-hosts-up
 	OK: checked!
