@@ -35,3 +35,15 @@ monitoring check plugin for the [EVE-NG](https://www.eve-ng.net/) [API](https://
 	Check if all nodes are up on all labs:
 	./check_eve_ng --hostname $hostname --username $username --password $password --lab all --all-hosts-up
 	OK: checked!
+
+
+## Installation
+
+To install, use `go get` and `go build`:
+
+    go get github.com/inexio/check_eve_ng
+    go build github.com/inexio/check_eve_ng
+
+## Staying up to date
+
+To update to the latest version, use `go get -u github.com/inexio/check_eve_ng`.
