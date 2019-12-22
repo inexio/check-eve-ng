@@ -1,8 +1,8 @@
 package main
 
 import (
-	"check_eve_ng/evengapi"
 	"fmt"
+	"github.com/inexio/check_eve_ng/evengapi"
 	"github.com/inexio/go-monitoringplugin"
 	"github.com/jessevdk/go-flags"
 	"github.com/oleiade/reflections"

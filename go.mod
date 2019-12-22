@@ -1,4 +1,4 @@
-module check_eve_ng
+module github.com/inexio/check_eve_ng
 
 go 1.13
 
