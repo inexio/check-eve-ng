@@ -30,13 +30,13 @@ func main() {
 		response.SetPerformanceDataJsonLabel(true)
 	}
 
-	eveNgAPI, err := evengapi.NewEveNgApi(opts.Hostname, opts.Username, opts.Password)
+	eveNgAPI, err := evengapi.NewEveNgAPI(opts.Hostname, opts.Username, opts.Password)
 	if err != nil {
 		response.UpdateStatus(monitoringplugin.UNKNOWN, "error during creating new eve ng api: "+err.Error())
 		return
 	}
 	if opts.ForceHTTP {
-		err = eveNgAPI.ForceHttp(true)
+		err = eveNgAPI.ForceHTTP(true)
 		if err != nil {
 			response.UpdateStatus(monitoringplugin.UNKNOWN, "eve ng api might not have been created properly: "+err.Error())
 			return
@@ -106,8 +106,8 @@ func main() {
 			for _, nodeData := range result {
 				if nodeData.Status == 0 {
 					labHostsDown++
-					if opts.AllNodesUp && !inArray(nodeData.Uuid, opts.ExcludeNode) {
-						response.UpdateStatus(monitoringplugin.CRITICAL, "node "+nodeData.Name+" ("+nodeData.Image+") in lab "+lab+" is down! (uuid: "+nodeData.Uuid+")")
+					if opts.AllNodesUp && !inArray(nodeData.UUID, opts.ExcludeNode) {
+						response.UpdateStatus(monitoringplugin.CRITICAL, "node "+nodeData.Name+" ("+nodeData.Image+") in lab "+lab+" is down! (uuid: "+nodeData.UUID+")")
 					}
 				} else {
 					labHostsUp++
@@ -161,7 +161,7 @@ func validateArgs(opts *cliOpts) error {
 	return nil
 }
 
-func getLabs(optLabs *[]string, eveNgAPI *evengapi.EveNgApi) ([]string, error) {
+func getLabs(optLabs *[]string, eveNgAPI *evengapi.EveNgAPI) ([]string, error) {
 	useAllLabs := false
 	for i, lab := range *optLabs {
 		if lab == "all" {

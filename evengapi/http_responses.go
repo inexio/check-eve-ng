@@ -42,6 +42,6 @@ type nodesResponse struct {
 type Nodes struct {
 	Name   string
 	Status int
-	Uuid   string
+	UUID   string
 	Image  string
 }

@@ -11,13 +11,13 @@ import (
 )
 
 /*
-EveNgApi is used to communicate with eve ng api.
+EveNgAPI is used to communicate with eve ng api.
 */
-type EveNgApi struct {
-	*eveNgApi
+type EveNgAPI struct {
+	*eveNgAPI
 }
 
-type eveNgApi struct {
+type eveNgAPI struct {
 	hostname string
 	username string
 	password string
@@ -26,34 +26,34 @@ type eveNgApi struct {
 }
 
 /*
-NotValidError is returned when an EveNgApi object was not initialized properly with the NewEveNgApi function
+NotValidError is returned when an EveNgAPI object was not initialized properly with the NewEveNgAPI function
 */
 type NotValidError struct{}
 
 func (m *NotValidError) Error() string {
-	return "EveNgApi was not created properly with the func NewEveNgApi()"
+	return "EveNgAPI was not created properly with the func NewEveNgAPI()"
 }
 
 /*
-NewEveNgApi generates a new eve ng api object and validates the input parameters
+NewEveNgAPI generates a new eve ng api object and validates the input parameters
 */
-func NewEveNgApi(hostname string, username string, password string) (*EveNgApi, error) {
+func NewEveNgAPI(hostname string, username string, password string) (*EveNgAPI, error) {
 	err := validateInputParams(hostname, username, password)
 	if err != nil {
 		return nil, errors.Wrap(err, "invalid input parameter")
 	}
-	eveNgApi := eveNgApi{hostname, username, password, resty.New(), false}
-	return &EveNgApi{&eveNgApi}, nil
+	eveNgAPI := eveNgAPI{hostname, username, password, resty.New(), false}
+	return &EveNgAPI{&eveNgAPI}, nil
 }
 
-func (e *EveNgApi) isValid() bool {
-	return e.eveNgApi != nil
+func (e *EveNgAPI) isValid() bool {
+	return e.eveNgAPI != nil
 }
 
 /*
-ForceHttp can be used to force http instead of https
+ForceHTTP can be used to force http instead of https
 */
-func (e *EveNgApi) ForceHttp(useHttp bool) error {
+func (e *EveNgAPI) ForceHTTP(useHTTP bool) error {
 	if !e.isValid() {
 		return &NotValidError{}
 	}
@@ -79,7 +79,7 @@ func validateInputParams(hostname string, username string, password string) erro
 	return nil
 }
 
-func (e *EveNgApi) get(path string, body string) (*resty.Response, error) {
+func (e *EveNgAPI) get(path string, body string) (*resty.Response, error) {
 	request := e.client.R()
 	if body != "" {
 		request.SetBody(body)
@@ -89,12 +89,12 @@ func (e *EveNgApi) get(path string, body string) (*resty.Response, error) {
 		return nil, errors.Wrap(err, "error during http request")
 	}
 	if response.StatusCode() != 200 {
-		return nil, errors.Wrap(getHttpError(response), "http status code != 200")
+		return nil, errors.Wrap(getHTTPError(response), "http status code != 200")
 	}
 	return response, nil
 }
 
-func (e *EveNgApi) post(path string, body string) (*resty.Response, error) {
+func (e *EveNgAPI) post(path string, body string) (*resty.Response, error) {
 	request := e.client.R()
 	if body != "" {
 		request.SetBody(body)
@@ -104,12 +104,12 @@ func (e *EveNgApi) post(path string, body string) (*resty.Response, error) {
 		return nil, errors.Wrap(err, "error during http request")
 	}
 	if response.StatusCode() != 200 {
-		return nil, errors.Wrap(getHttpError(response), "http status code != 200")
+		return nil, errors.Wrap(getHTTPError(response), "http status code != 200")
 	}
 	return response, nil
 }
 
-func (e *EveNgApi) getProtocol() string {
+func (e *EveNgAPI) getProtocol() string {
 	if e.http {
 		return "http"
 	}
@@ -119,7 +119,7 @@ func (e *EveNgApi) getProtocol() string {
 /*
 Login does a login with the given username and password
 */
-func (e *EveNgApi) Login() error {
+func (e *EveNgAPI) Login() error {
 	if !e.isValid() {
 		return &NotValidError{}
 	}
@@ -142,7 +142,7 @@ func (e *EveNgApi) Login() error {
 /*
 Logout closes the connection to the api. It should always be called directly after Login in an defer statement
 */
-func (e *EveNgApi) Logout() error {
+func (e *EveNgAPI) Logout() error {
 	if !e.isValid() {
 		return &NotValidError{}
 	}
@@ -153,7 +153,7 @@ func (e *EveNgApi) Logout() error {
 	return nil
 }
 
-func getHttpError(response *resty.Response) error {
+func getHTTPError(response *resty.Response) error {
 	data, err := jsonDecode(response.Body())
 	if err != nil {
 		return errors.New("Status != 200")
@@ -164,7 +164,7 @@ func getHttpError(response *resty.Response) error {
 /*
 GetSystemStatus returns the system status of eve ng
 */
-func (e *EveNgApi) GetSystemStatus() (SystemStatus, error) {
+func (e *EveNgAPI) GetSystemStatus() (SystemStatus, error) {
 	if !e.isValid() {
 		return SystemStatus{}, &NotValidError{}
 	}
@@ -183,7 +183,7 @@ func (e *EveNgApi) GetSystemStatus() (SystemStatus, error) {
 /*
 GetAllNodesForLab returns all nodes that exist for one lab.
 */
-func (e *EveNgApi) GetAllNodesForLab(lab string) (map[string]Nodes, error) {
+func (e *EveNgAPI) GetAllNodesForLab(lab string) (map[string]Nodes, error) {
 	if !e.isValid() {
 		return nil, &NotValidError{}
 	}
@@ -202,14 +202,14 @@ func (e *EveNgApi) GetAllNodesForLab(lab string) (map[string]Nodes, error) {
 /*
 GetAllLabs returns all labs.
 */
-func (e *EveNgApi) GetAllLabs() ([]string, error) {
+func (e *EveNgAPI) GetAllLabs() ([]string, error) {
 	if !e.isValid() {
 		return nil, &NotValidError{}
 	}
 	return e.getAllLabsForFolder("/")
 }
 
-func (e *EveNgApi) getAllLabsForFolder(folder string) ([]string, error) {
+func (e *EveNgAPI) getAllLabsForFolder(folder string) ([]string, error) {
 	var labs []string
 	response, err := e.get("/api/folders"+folder, "")
 	if err != nil {
